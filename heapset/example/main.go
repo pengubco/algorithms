@@ -7,6 +7,12 @@ import (
 	"github.com/pengubco/ads/heapset"
 )
 
+type Job struct {
+	id         int
+	expiration time.Time
+	name       string
+}
+
 func main() {
 	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) bool {
 		return v1.expiration.Before(v2.expiration)
@@ -17,7 +23,7 @@ func main() {
 		{2, now.Add(-2 * time.Minute), "job 2"},
 		{3, now.Add(-3 * time.Minute), "job 3"},
 	}
-	for i, _ := range jobs {
+	for i := range jobs {
 		hs.Set(jobs[i].id, &jobs[i])
 	}
 	id, job, _ := hs.Top()
@@ -30,10 +36,4 @@ func main() {
 			fmt.Printf("job id %d, name %s, expiration %v\n", id, job.name, job.expiration)
 		}
 	}
-}
-
-type Job struct {
-	id         int
-	expiration time.Time
-	name       string
 }

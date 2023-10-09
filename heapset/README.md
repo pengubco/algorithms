@@ -4,8 +4,10 @@ HeapSet is a combination of Heap and HashMap. It is useful for workloads that re
 1. A Key-Value store that supports Get, Set, Delete by key. 
 2. A Heap that supports access the key-value pair of the smallest value.
 
-A good use of HeapSet is implementing greedy algorithms like the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) 
+Some good use cases:
+1. Implementing greedy algorithms like the [Dijkstra's algorithm](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) 
 and [Prim's algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm). 
+2. Job Scheduler that schedules job with the highest priority.
 
 Some similar data structures are: 
 1. [TreeMap](https://docs.oracle.com/javase/8/docs/api/java/util/TreeMap.html): key-value
@@ -26,6 +28,12 @@ support update an element's priority either.
 
 ## How to use it
 ```go
+type Job struct {
+	id         int
+	expiration time.Time
+	name       string
+}
+
 func main() {
 	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) bool {
 		return v1.expiration.Before(v2.expiration)
@@ -50,15 +58,9 @@ func main() {
 		}
 	}
 }
-
-type Job struct {
-	id         int
-	expiration time.Time
-	name       string
-}
 ```
 
-## Benchmark 
+## Performance
 We benchmark Add, Update, Delete, Pop on a heapset of 1M key-value pairs. The following is a result on my Mac M1 Max. You can run the benchmark with.
 ```
 go test -bench BenchmarkHeapSet -benchmem  -benchtime 10s
@@ -81,4 +83,7 @@ to maintain the heap structure. It takes 604ms (~0.6 second) to pop 1M key-value
 this is fast enough for normal production use.
 
 ## Correctness 
-TODO: test correctness against redis sorted set.
+We run 1M operations on HeapSet and a SortedSet in Redis, see [redis-compare/main.go](./example/redis-compare/main.go). After each operation, we compare the size and the smallest key-value pair from HeapSet with corresponding values 
+from Redis. This gives us confidence that HeapSet is correct.
+
+If you found a bug, please open an issue. 

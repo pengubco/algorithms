@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"slices"
+
 	"github.com/pengubco/ads/heapset"
 	"github.com/stretchr/testify/assert"
 )
@@ -36,6 +38,27 @@ func TestHeapSet_Single_Pair(t *testing.T) {
 	assert.False(ok)
 	k, v, ok = hs.Top()
 	assert.False(ok)
+}
+
+func TestHeapSet_DuplicateValues(t *testing.T) {
+	assert := assert.New(t)
+	hs := heapset.NewHeapSet[string, int](func(v1, v2 int) bool {
+		return v1 < v2
+	})
+	hs.Set("a", 20)
+	hs.Set("b", 10)
+	hs.Set("c", 20)
+	k, v, _ := hs.Pop()
+	assert.Equal("b", k)
+	assert.Equal(10, v)
+	k2, v2, _ := hs.Pop()
+	k3, v3, _ := hs.Pop()
+	assert.Equal(20, v2)
+	assert.Equal(20, v3)
+
+	keys := []string{k2, k3}
+	slices.Sort(keys)
+	assert.Equal([]string{"a", "c"}, keys)
 }
 
 func TestHeapSet_Simple_Pairs(t *testing.T) {
