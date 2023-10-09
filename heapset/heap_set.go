@@ -33,7 +33,7 @@ type HeapSet[K comparable, V any] struct {
 	h heap.Interface
 
 	// hashmap
-	s map[K]*element[K, V]
+	s map[K]*Element[K, V]
 
 	emptyK K
 	emptyV V
@@ -43,7 +43,7 @@ type HeapSet[K comparable, V any] struct {
 func NewHeapSet[K comparable, V any](less func(v1, v2 V) bool) *HeapSet[K, V] {
 	hs := HeapSet[K, V]{
 		h: newHeapStruct[K, V](less),
-		s: make(map[K]*element[K, V]),
+		s: make(map[K]*Element[K, V]),
 	}
 	heap.Init(hs.h)
 	return &hs
@@ -53,15 +53,15 @@ func NewHeapSet[K comparable, V any](less func(v1, v2 V) bool) *HeapSet[K, V] {
 func (hs *HeapSet[K, V]) Set(k K, v V) {
 	existingElement, ok := hs.s[k]
 	if !ok {
-		e := element[K, V]{
-			key:   k,
-			value: v,
+		e := Element[K, V]{
+			Key:   k,
+			Value: v,
 		}
 		heap.Push(hs.h, &e)
 		hs.s[k] = &e
 		return
 	}
-	existingElement.value = v
+	existingElement.Value = v
 	heap.Fix(hs.h, existingElement.index)
 }
 
@@ -71,7 +71,7 @@ func (hs *HeapSet[K, V]) Get(k K) (V, bool) {
 	if !ok {
 		return hs.emptyV, false
 	}
-	return e.value, true
+	return e.Value, true
 }
 
 // Delete deletes the key-value pair of the key.
@@ -98,11 +98,11 @@ func (hs *HeapSet[K, V]) Top() (K, V, bool) {
 		return hs.emptyK, hs.emptyV, false
 	}
 
-	var e *element[K, V]
+	var e *Element[K, V]
 	h := hs.h.(*heapStruct[K, V])
 	e = h.e[0]
 
-	return e.key, e.value, true
+	return e.Key, e.Value, true
 }
 
 // Pop removes and returns the key-value pair of the smallest value. It returns flase
@@ -111,9 +111,9 @@ func (hs *HeapSet[K, V]) Pop() (K, V, bool) {
 	if hs.h.Len() == 0 {
 		return hs.emptyK, hs.emptyV, false
 	}
-	e := heap.Pop(hs.h).(*element[K, V])
-	delete(hs.s, e.key)
-	return e.key, e.value, true
+	e := heap.Pop(hs.h).(*Element[K, V])
+	delete(hs.s, e.Key)
+	return e.Key, e.Value, true
 }
 
 // Size returns the number of key-value pairs.
@@ -121,17 +121,24 @@ func (pq *HeapSet[K, V]) Size() int {
 	return pq.h.Len()
 }
 
-// element is the unit of data stored in hash map and the heap.
-type element[K comparable, V any] struct {
-	key   K
-	value V
+// Map returns the underlying map. It is here to provide an efficient way of
+// iterating over all key-value pairs.
+func (hs *HeapSet[K, V]) Map() map[K]*Element[K, V] {
+	return hs.s
+}
 
+// Element is the unit of data stored in hash map and the heap.
+type Element[K comparable, V any] struct {
+	Key   K
+	Value V
+
+	// The array index of the element in the heap.
 	index int
 }
 
 // heapStruct implements the heap.Interface.
 type heapStruct[K comparable, V any] struct {
-	e    []*element[K, V]
+	e    []*Element[K, V]
 	less func(v1, v2 V) bool
 }
 
@@ -146,7 +153,7 @@ func (h *heapStruct[K, V]) Len() int {
 }
 
 func (h *heapStruct[K, V]) Less(i, j int) bool {
-	return h.less(h.e[i].value, h.e[j].value)
+	return h.less(h.e[i].Value, h.e[j].Value)
 }
 
 func (h *heapStruct[K, V]) Swap(i, j int) {
@@ -157,7 +164,7 @@ func (h *heapStruct[K, V]) Swap(i, j int) {
 
 func (h *heapStruct[K, V]) Push(x any) {
 	n := len(h.e)
-	item := x.(*element[K, V])
+	item := x.(*Element[K, V])
 	item.index = n
 	h.e = append(h.e, item)
 }
