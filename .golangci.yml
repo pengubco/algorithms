@@ -1,0 +1,63 @@
+run:
+  concurrency: 4
+
+  timeout: 5m
+
+  issues-exit-code: 2
+
+  tests: false
+
+  go: "1.21"
+
+output:
+  print-issued-lines: true
+
+  print-linter-name: true
+
+  uniq-by-line: true
+
+  sort-results: true
+
+linters-settings:
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      # keep in alphabetic order
+      - builtinShadow
+      - commentFormatting
+      - deprecatedComment
+      - ifElseChain
+      - importShadow
+      - octalLiteral
+      - paramTypeCombine
+      - rangeValCopy
+      - timeCmpSimplify
+      - typeDefFirst
+      - typeUnparen
+      - unlabelStmt
+      - unnamedResult
+      - whyNoLint
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment
+      - shadow
+
+linters:
+  enable-all: false
+  disable-all: true
+  fast: false
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gocritic
+    - unparam
