@@ -27,6 +27,11 @@ support update an element's priority either.
 
 
 ## How to use it
+
+### Simple Value Type
+// TODO
+
+### Composite Value Type
 ```go
 type Job struct {
 	id         int
