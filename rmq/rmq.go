@@ -1,16 +1,18 @@
-// Package rmq implements a range-minimum-query data structure.
-// rmq can answer the minimum value of any subarray of a static array.
+// Package rmq implements a range-minimum-query data structure that
+// 1. precomputes a sparse table on O(N*logN) time
+// 2. answers the minimum value of any subarray of a static array in O(1) time.
 //
 // Example usage.
 //
 //	q := NewRMQ[int]([]int{6, 1, 0, 10, 9}, func(v1, v2 int) bool { return v1 < v2 })
 //	q.RMQ(0, 0) // 6
 //	q.RMQ(0,1) // 1
+//
+// See https://cp-algorithms.com/sequences/rmq.html for more info.
 package rmq
 
-// https://cp-algorithms.com/sequences/rmq.html
-// https://cp-algorithms.com/data_structures/sparse-table.html
-
+// RMQ is a data structure that precomputes a sparse table on O(N*logN) time and
+// answers the minimum value of any subarray of a static array in O(1) time.
 type RMQ[V any] struct {
 	log2 []int
 
@@ -24,6 +26,7 @@ type RMQ[V any] struct {
 	less func(v1, v2 V) bool
 }
 
+// NewRMQ creates a RMQ with the elements and less function.
 func NewRMQ[V any](elements []V, less func(v1, v2 V) bool) *RMQ[V] {
 	n := len(elements)
 	q := RMQ[V]{
@@ -35,6 +38,7 @@ func NewRMQ[V any](elements []V, less func(v1, v2 V) bool) *RMQ[V] {
 	return &q
 }
 
+// RMQ returns the minimum value between elements[l:r], inclusive at both ends.
 func (q *RMQ[V]) RMQ(l, r int) V {
 	k := q.log2[r-l+1]
 	result := q.st[k][r-(1<<k)+1]
