@@ -23,16 +23,16 @@ type RMQ[V any] struct {
 	// st[i][j]: the min of range [a[j], a[j +2^i - 1]], a sub array of length 2^i.
 	st [][]V
 
-	less func(v1, v2 V) bool
+	compare func(v1, v2 V) int
 }
 
-// NewRMQ creates a RMQ with the elements and less function.
-func NewRMQ[V any](elements []V, less func(v1, v2 V) bool) *RMQ[V] {
+// NewRMQ creates a RMQ with the elements and compare function.
+func NewRMQ[V any](elements []V, compare func(v1, v2 V) int) *RMQ[V] {
 	n := len(elements)
 	q := RMQ[V]{
 		log2:     calcLog2n(n),
 		elements: elements,
-		less:     less,
+		compare:  compare,
 	}
 	q.calcSparseTable()
 	return &q
@@ -42,7 +42,7 @@ func NewRMQ[V any](elements []V, less func(v1, v2 V) bool) *RMQ[V] {
 func (q *RMQ[V]) RMQ(l, r int) V {
 	k := q.log2[r-l+1]
 	result := q.st[k][r-(1<<k)+1]
-	if q.less(q.st[k][l], result) {
+	if q.compare(q.st[k][l], result) < 0 {
 		result = q.st[k][l]
 	}
 	return result
@@ -62,7 +62,7 @@ func (q *RMQ[V]) calcSparseTable() {
 	for i := 1; i <= m; i++ {
 		for j := 0; j+(1<<i)-1 < n; j++ {
 			q.st[i][j] = q.st[i-1][j+(1<<(i-1))]
-			if q.less(q.st[i-1][j], q.st[i][j]) {
+			if q.compare(q.st[i-1][j], q.st[i][j]) < 0 {
 				q.st[i][j] = q.st[i-1][j]
 			}
 		}

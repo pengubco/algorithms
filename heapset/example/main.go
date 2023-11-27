@@ -17,8 +17,8 @@ func main() {
 }
 
 func simpleKV() {
-	hs := heapset.NewHeapSet[int, int](func(a, b int) bool {
-		return a < b
+	hs := heapset.NewHeapSet[int, int](func(a, b int) int {
+		return a - b
 	})
 	hs.Set(1, 10)
 	hs.Set(2, 10)
@@ -39,8 +39,15 @@ type Job struct {
 }
 
 func jobScheduler() {
-	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) bool {
-		return v1.expiration.Before(v2.expiration)
+	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) int {
+		switch {
+		case v1.expiration.Before(v2.expiration):
+			return -1
+		case v1.expiration.After(v2.expiration):
+			return 1
+		default:
+			return 0
+		}
 	})
 	now, err := time.Parse("2006-01-02", "2022-12-30")
 	if err != nil {

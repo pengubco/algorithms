@@ -1,15 +1,15 @@
-package unionfind_test
+package union_find_test
 
 import (
 	"testing"
 
-	"github.com/pengubco/ads/unionfind"
+	"github.com/pengubco/ads/union_find"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUnionFind(t *testing.T) {
 	assert := assert.New(t)
-	uf := unionfind.NewUnionFind(5)
+	uf := union_find.NewUnionFind(5)
 	for i := 0; i < 5; i++ {
 		assert.Equal(i, uf.Find(i))
 	}

@@ -19,8 +19,8 @@ func main() {
 	})
 
 	// Redis sorted set uses string as key and int as value.
-	hs := heapset.NewHeapSet[string, float64](func(v1, v2 float64) bool {
-		return v1 < v2
+	hs := heapset.NewHeapSet[string, float64](func(v1, v2 float64) int {
+		return int(v1 - v2)
 	})
 
 	err := compareHeapSeatWithRedis(rdb, "ss", hs, 1_000_000)

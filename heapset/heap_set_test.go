@@ -14,8 +14,8 @@ import (
 
 func TestHeapSet_Single_Pair(t *testing.T) {
 	assert := assert.New(t)
-	hs := heapset.NewHeapSet[string, int](func(v1, v2 int) bool {
-		return v1 < v2
+	hs := heapset.NewHeapSet[string, int](func(v1, v2 int) int {
+		return v1 - v2
 	})
 	hs.Set("a", 1)
 	k, v, ok := hs.Top()
@@ -42,8 +42,8 @@ func TestHeapSet_Single_Pair(t *testing.T) {
 
 func TestHeapSet_DuplicateValues(t *testing.T) {
 	assert := assert.New(t)
-	hs := heapset.NewHeapSet[string, int](func(v1, v2 int) bool {
-		return v1 < v2
+	hs := heapset.NewHeapSet[string, int](func(v1, v2 int) int {
+		return v1 - v2
 	})
 	hs.Set("a", 20)
 	hs.Set("b", 10)
@@ -64,8 +64,8 @@ func TestHeapSet_DuplicateValues(t *testing.T) {
 func TestHeapSet_Simple_Pairs(t *testing.T) {
 	assert := assert.New(t)
 
-	hs := heapset.NewHeapSet[string, int](func(v1, v2 int) bool {
-		return v1 > v2
+	hs := heapset.NewHeapSet[string, int](func(v1, v2 int) int {
+		return v2 - v1
 	})
 	for i := 0; i < 26; i++ {
 		hs.Set(fmt.Sprintf("%c", 'a'+i), i)
@@ -99,8 +99,15 @@ func TestHeapSet_CompositeV(t *testing.T) {
 	type Job struct {
 		expire time.Time
 	}
-	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) bool {
-		return v1.expire.Before(v2.expire)
+	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) int {
+		switch {
+		case v1.expire.Before(v2.expire):
+			return -1
+		case v1.expire.After(v2.expire):
+			return 1
+		default:
+			return 0
+		}
 	})
 
 	for i := 0; i < 100; i++ {
@@ -126,8 +133,8 @@ func BenchmarkHeapSet_Add_1M(b *testing.B) {
 	indexes := shuffledIndexes(n)
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
-		hs := heapset.NewHeapSet[int, int](func(v1, v2 int) bool {
-			return v1 < v2
+		hs := heapset.NewHeapSet[int, int](func(v1, v2 int) int {
+			return v1 - v2
 		})
 
 		b.StartTimer()
@@ -143,8 +150,8 @@ func BenchmarkHeapSet_Update_1M(b *testing.B) {
 	indexes := shuffledIndexes(n)
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
-		hs := heapset.NewHeapSet[int, int](func(v1, v2 int) bool {
-			return v1 < v2
+		hs := heapset.NewHeapSet[int, int](func(v1, v2 int) int {
+			return v1 - v2
 		})
 		for j := 0; j < n; j++ {
 			hs.Set(j, indexes[j])
@@ -166,8 +173,8 @@ func BenchmarkHeapSet_Del_1M(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		hs := heapset.NewHeapSet[int, int](func(v1, v2 int) bool {
-			return v1 < v2
+		hs := heapset.NewHeapSet[int, int](func(v1, v2 int) int {
+			return v1 - v2
 		})
 		for j := 0; j < n; j++ {
 			hs.Set(j, r.Int())
@@ -186,8 +193,8 @@ func BenchmarkHeapSet_Pop_1M(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		hs := heapset.NewHeapSet[int, int](func(v1, v2 int) bool {
-			return v1 < v2
+		hs := heapset.NewHeapSet[int, int](func(v1, v2 int) int {
+			return v1 - v2
 		})
 		for j := 0; j < n; j++ {
 			hs.Set(j, r.Int())

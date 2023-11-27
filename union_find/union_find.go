@@ -10,7 +10,7 @@
 // uf.Union(2, 4)
 // uf.Find(1) == uf.Find(2) // true
 
-package unionfind
+package union_find
 
 // UnionFind can union two disjoint sets and find the disjoint set an element belong
 // to in O(1) time. Each element is identified by an integer as an index of the

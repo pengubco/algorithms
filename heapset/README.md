@@ -31,8 +31,8 @@ support update an element's priority either.
 ### Simple Value Type
 ```go
 func main() {
-	hs := heapset.NewHeapSet[int, int](func(a, b int) bool {
-		return a < b
+	hs := heapset.NewHeapSet[int, int](func(a, b int) int {
+		return a - b
 	})
 	hs.Set(1, 10)
 	hs.Set(2, 10)
@@ -57,7 +57,14 @@ type Job struct {
 
 func main() {
 	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) bool {
-		return v1.expiration.Before(v2.expiration)
+		switch {
+		case v1.expire.Before(v2.expire):
+			return -1
+		case v1.expire.After(v2.expire):
+			return 1
+		default:
+			return 0
+		}
 	})
 	now := time.Now()
 	jobs := []Job{

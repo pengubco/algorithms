@@ -13,8 +13,15 @@
 //		expire time.Time
 //	  // other fields
 //	}
-//	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) bool {
-//		return v1.expire.Before(v2.expire)
+//	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) int {
+//	  switch {
+//	  case v1.expiration.Before(v2.expiration):
+//	  	return -1
+//	  case v1.expiration.After(v2.expiration):
+//	  	return 1
+//	  default:
+//	  	return 0
+//	  }
 //	})
 //
 //	j := Job{id: 1, expire: time.Now(), ....}
@@ -39,10 +46,10 @@ type HeapSet[K comparable, V any] struct {
 	emptyV V
 }
 
-// NewHeapSet returns a HeapSet where values are ordered by the given less function.
-func NewHeapSet[K comparable, V any](less func(v1, v2 V) bool) *HeapSet[K, V] {
+// NewHeapSet returns a HeapSet where values are ordered by the given compare function.
+func NewHeapSet[K comparable, V any](compare func(v1, v2 V) int) *HeapSet[K, V] {
 	hs := HeapSet[K, V]{
-		h: newHeapStruct[K, V](less),
+		h: newHeapStruct[K, V](compare),
 		s: make(map[K]*Element[K, V]),
 	}
 	heap.Init(hs.h)
@@ -138,13 +145,13 @@ type Element[K comparable, V any] struct {
 
 // heapStruct implements the heap.Interface.
 type heapStruct[K comparable, V any] struct {
-	e    []*Element[K, V]
-	less func(v1, v2 V) bool
+	e       []*Element[K, V]
+	compare func(v1, v2 V) int
 }
 
-func newHeapStruct[K comparable, V any](less func(v1, v2 V) bool) *heapStruct[K, V] {
+func newHeapStruct[K comparable, V any](compare func(v1, v2 V) int) *heapStruct[K, V] {
 	return &heapStruct[K, V]{
-		less: less,
+		compare: compare,
 	}
 }
 
@@ -153,7 +160,7 @@ func (h *heapStruct[K, V]) Len() int {
 }
 
 func (h *heapStruct[K, V]) Less(i, j int) bool {
-	return h.less(h.e[i].Value, h.e[j].Value)
+	return h.compare(h.e[i].Value, h.e[j].Value) < 0
 }
 
 func (h *heapStruct[K, V]) Swap(i, j int) {
