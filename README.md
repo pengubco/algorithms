@@ -7,6 +7,8 @@ its own README.md and examples.
 ## Data Structures
 - [Heap Set](./heapset/README.md)
 - [Range Minimum Query](./rmq/rmq.go)
+- [Union Find](./unionfind/union_find.go)
+- [Stack](./stack/stack.go)
 
 ## Algorithms
 
