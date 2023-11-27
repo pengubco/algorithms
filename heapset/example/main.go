@@ -8,40 +8,37 @@ import (
 )
 
 func main() {
-	fmt.Println("example using simple value type")
-	withSimpleValue()
+	fmt.Println("example 1: simple key value types")
+	simpleKV()
 
 	fmt.Println()
-	fmt.Println("example using composite value type")
-	withCompositeValue()
+	fmt.Println("example 2: advanced key value types: job scheduler")
+	jobScheduler()
 }
 
-func withSimpleValue() {
-	hs := heapset.NewHeapSet[string, int](func(v1, v2 int) bool {
-		return v1 < v2
+func simpleKV() {
+	hs := heapset.NewHeapSet[int, int](func(a, b int) bool {
+		return a < b
 	})
-
-	hs.Set("apple", 1)
-	hs.Set("banana", 2)
-	hs.Set("cherry", 3)
-	k, _, _ := hs.Top()
-	fmt.Printf("my favorite fruit is %s\n", k) // apple
-	hs.Pop()
-	k, _, _ = hs.Top()
-	fmt.Printf("my 2nd favorite fruit is %s\n", k) // banana
-	hs.Pop()
-	k, _, _ = hs.Top()
-	fmt.Printf("my 3rd favorite fruit is %s\n", k) // cherry
-	hs.Pop()
+	hs.Set(1, 10)
+	hs.Set(2, 10)
+	hs.Set(3, 30)
+	fmt.Printf("size: %d\n", hs.Size()) // "size: 3"
+	if v, ok := hs.Get(1); ok {
+		fmt.Printf("key: 1, value: %d\n", v) // "key: 1, value: 10"
+	}
+	if k, v, ok := hs.Top(); ok {
+		fmt.Printf("key: %d, value: %d\n", k, v) // "key: 1, value: 10" or "key: 2, value: 10"
+	}
 }
 
-func withCompositeValue() {
-	type Job struct {
-		id         int
-		expiration time.Time
-		name       string
-	}
+type Job struct {
+	id         int
+	expiration time.Time
+	name       string
+}
 
+func jobScheduler() {
 	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) bool {
 		return v1.expiration.Before(v2.expiration)
 	})

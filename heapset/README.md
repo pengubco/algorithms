@@ -29,7 +29,23 @@ support update an element's priority either.
 ## How to use it
 
 ### Simple Value Type
-// TODO
+```go
+func main() {
+	hs := heapset.NewHeapSet[int, int](func(a, b int) bool {
+		return a < b
+	})
+	hs.Set(1, 10)
+	hs.Set(2, 10)
+	hs.Set(3, 30)
+	fmt.Printf("size: %d\n", hs.Size()) // "size: 3"
+	if v, ok := hs.Get(1); ok {
+		fmt.Printf("key: 1, value: %d\n", v) // "key: 1, value: 10"
+	}
+	if k, v, ok := hs.Top(); ok {
+		fmt.Printf("key: %d, value: %d\n", k, v) // "key: 1, value: 10" or "key: 2, value: 10"
+	}
+}
+```
 
 ### Composite Value Type
 ```go
