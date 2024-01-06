@@ -4,13 +4,11 @@ This is a repo of useful Algorithms and Data Structures (ADS) in Go, with Generi
 Algorithms and data structures are grouped into package and each package has 
 its own README.md and examples. 
 
-## Data Structures
 - [Heap Set](./heapset/README.md)
+- [Maglev Hash](./maglevhash/maglev.go)
 - [Range Minimum Query](./rmq/rmq.go)
-- [Union Find](./unionfind/union_find.go)
 - [Stack](./stack/stack.go)
-
-## Algorithms
+- [Union Find](./union_find/union_find.go)
 
 ## Contributions
 
