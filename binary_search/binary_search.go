@@ -26,7 +26,7 @@ func NewBinarySearcher[V any](compare func(v1, v2 V) int) *BinarySearcher[V] {
 // is larger than or equal to val. Imagine we'd insert val to the sorted slice and
 // keep the slice sorted, the returned position is the lower bound where we can insert.
 // The range is half close [first, last).
-// Return last if all elements are less than or equal to val.
+// Return last if all elements are less than val.
 func (s *BinarySearcher[V]) LowerBound(elements []V, first int, last int, val V) int {
 	cnt := last - first
 	for cnt > 0 {

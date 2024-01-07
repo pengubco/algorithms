@@ -1,9 +1,9 @@
-// Package heapset implements a key-value store where key-value pairs can be accessed either
-// by key or the order of values.
+// Package heapset implements a key-value store where key-value pairs can be
+// accessed either by key or the order of values.
 // The value must be orderable (a < b) and the key must be comparable (a == b).
 //
 // Heapset combines the hash map and heap. One example is to store
-// a set of jobs where each job has a priority. And we want to execute jobs by priority
+// a set of jobs where each job has a priority. And we want to query jobs by priority
 // and update a job's priority.
 
 // If the value is a composite type, the recommended practice is to use pointer type.
@@ -24,9 +24,11 @@
 //	  }
 //	})
 //
-//	j := Job{id: 1, expire: time.Now(), ....}
+// jobID := 1
 //
-//	hs.Set(j.id, &j)
+// job := Job{id: jobID, expire: time.Now(), ....}
+//
+// hs.Set(jobID, &job)
 package heapset
 
 import (
