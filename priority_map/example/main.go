@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/pengubco/ads/heapset"
+	"github.com/pengubco/ads/prioritymap"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 }
 
 func simpleKV() {
-	hs := heapset.NewHeapSet[int, int](func(a, b int) int {
+	hs := prioritymap.NewPriorityMap[int, int](func(a, b int) int {
 		return a - b
 	})
 	hs.Set(1, 10)
@@ -39,7 +39,7 @@ type Job struct {
 }
 
 func jobScheduler() {
-	hs := heapset.NewHeapSet[int, *Job](func(v1, v2 *Job) int {
+	hs := prioritymap.NewPriorityMap[int, *Job](func(v1, v2 *Job) int {
 		switch {
 		case v1.expiration.Before(v2.expiration):
 			return -1

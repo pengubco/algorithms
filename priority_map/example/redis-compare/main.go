@@ -7,7 +7,7 @@ import (
 	"log"
 	"math/rand"
 
-	"github.com/pengubco/ads/heapset"
+	"github.com/pengubco/ads/prioritymap"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -19,7 +19,7 @@ func main() {
 	})
 
 	// Redis sorted set uses string as key and int as value.
-	hs := heapset.NewHeapSet[string, float64](func(v1, v2 float64) int {
+	hs := prioritymap.NewPriorityMap[string, float64](func(v1, v2 float64) int {
 		return int(v1 - v2)
 	})
 
@@ -29,9 +29,9 @@ func main() {
 	}
 }
 
-// Carry out n operations on HeapSet and Redis. After each operation, get the Top() from HeapSet
+// Carry out n operations on PriorityMap and Redis. After each operation, get the Top() from PriorityMap
 // and compare it with the minimum value in Redis SortedSet.
-func compareHeapSeatWithRedis(rdb *redis.Client, sortedSetName string, hs *heapset.HeapSet[string, float64], n int) error {
+func compareHeapSeatWithRedis(rdb *redis.Client, sortedSetName string, hs *prioritymap.PriorityMap[string, float64], n int) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -61,7 +61,7 @@ func compareHeapSeatWithRedis(rdb *redis.Client, sortedSetName string, hs *heaps
 			return err
 		}
 		if int64(hs.Size()) != size {
-			return fmt.Errorf("size is different. Redis: %d, HeapSet: %d", size, hs.Size())
+			return fmt.Errorf("size is different. Redis: %d, PriorityMap: %d", size, hs.Size())
 		}
 
 		// check top
@@ -73,7 +73,7 @@ func compareHeapSeatWithRedis(rdb *redis.Client, sortedSetName string, hs *heaps
 		redisKey := results[0].Member.(string)
 		redisValue := results[0].Score
 		if redisKey != key || redisValue != value {
-			return fmt.Errorf("top different. redis: key %s, value: %f; heapset: key %s, value %f",
+			return fmt.Errorf("top different. redis: key %s, value: %f; priority_map: key %s, value %f",
 				redisKey, redisValue, key, value)
 		}
 		return nil

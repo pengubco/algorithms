@@ -3,7 +3,7 @@ package stack_test
 import (
 	"testing"
 
-	"github.com/pengubco/ads/stack"
+	"github.com/pengubco/algorithms/stack"
 	"github.com/stretchr/testify/assert"
 )
 

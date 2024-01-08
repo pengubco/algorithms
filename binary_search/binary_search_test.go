@@ -3,7 +3,7 @@ package binary_search_test
 import (
 	"testing"
 
-	"github.com/pengubco/ads/binary_search"
+	"github.com/pengubco/algorithms/binary_search"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,4 +1,4 @@
-// Package priorityqueue implements Priority Queue with four methods
+// Package priority_queue implements Priority Queue with four methods
 // 1. Push(V).
 // 2. Top() (V, error).
 // 3. Pop() (V, error)
@@ -10,14 +10,14 @@
 // v, _ := pq.Top()
 // v, _ = pq.Pop()
 //
-// See usage example in the priority_queue_test.go.
+// See more usage example in the priority_queue_test.go.
 //
 // Why implement priority queue?
 // The container/heap is not easy and intuitive to use because:
 // 1. It requires boilerplate code to implement the heap interface.
 // 2. Push/pop operations need to use heap.Push and heap.Pop on an array, which
 // is not intuitive.
-package priorityqueue
+package priority_queue
 
 import (
 	"container/heap"

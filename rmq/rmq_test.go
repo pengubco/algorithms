@@ -3,7 +3,7 @@ package rmq_test
 import (
 	"testing"
 
-	"github.com/pengubco/ads/rmq"
+	"github.com/pengubco/algorithms/rmq"
 	"github.com/stretchr/testify/assert"
 )
 

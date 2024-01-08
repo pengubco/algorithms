@@ -3,7 +3,7 @@ package util_test
 import (
 	"testing"
 
-	"github.com/pengubco/ads/util"
+	"github.com/pengubco/algorithms/util"
 	"github.com/stretchr/testify/assert"
 )
 

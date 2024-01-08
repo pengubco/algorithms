@@ -1,22 +1,22 @@
-package priorityqueue_test
+package priority_queue_test
 
 import (
 	"testing"
 	"time"
 
-	priorityqueue "github.com/pengubco/ads/priority_queue"
+	"github.com/pengubco/algorithms/priority_queue"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestPriorityQueue_SimpleType(t *testing.T) {
-	pq, err := priorityqueue.NewPriorityQueue[int](func(v1, v2 int) bool {
+	pq, err := priority_queue.NewPriorityQueue[int](func(v1, v2 int) bool {
 		return v1 < v2
 	})
 	assert.NoError(t, err)
 	_, err = pq.Top()
-	assert.Equal(t, priorityqueue.ErrQueueIsEmpty, err)
+	assert.Equal(t, priority_queue.ErrQueueIsEmpty, err)
 	_, err = pq.Pop()
-	assert.Equal(t, priorityqueue.ErrQueueIsEmpty, err)
+	assert.Equal(t, priority_queue.ErrQueueIsEmpty, err)
 
 	pq.Push(10)
 	v, err := pq.Top()
@@ -43,7 +43,7 @@ func TestPriorityQueue_CustomizedType(t *testing.T) {
 		name       string
 		expiration time.Time
 	}
-	pq, err := priorityqueue.NewPriorityQueue[*Job](func(v1, v2 *Job) bool {
+	pq, err := priority_queue.NewPriorityQueue[*Job](func(v1, v2 *Job) bool {
 		return v1.expiration.Before(v2.expiration)
 	})
 	assert.NoError(t, err)

@@ -3,7 +3,7 @@ package union_find_test
 import (
 	"testing"
 
-	"github.com/pengubco/ads/union_find"
+	"github.com/pengubco/algorithms/union_find"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,4 +1,4 @@
-module github.com/pengubco/ads
+module github.com/pengubco/algorithms
 
 go 1.21.5
 

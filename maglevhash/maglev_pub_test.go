@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/pengubco/ads/maglevhash"
+	"github.com/pengubco/algorithms/maglevhash"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )

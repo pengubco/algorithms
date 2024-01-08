@@ -4,7 +4,8 @@ This is a repo of useful Algorithms and Data Structures (ADS) in Go, with Generi
 Algorithms and data structures are grouped into package and each package has 
 its own README.md and examples. 
 
-- [Heap Set](./heapset/README.md)
+- [Priority Map](./priority_map/README.md)
+- [Priority Queue](./priority_queue/priority_queue.go)
 - [Maglev Hash](./maglevhash/maglev.go)
 - [Range Minimum Query](./rmq/rmq.go)
 - [Stack](./stack/stack.go)
