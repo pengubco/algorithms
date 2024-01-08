@@ -1,4 +1,4 @@
-package maglevhash
+package maglev_hash
 
 import (
 	"fmt"

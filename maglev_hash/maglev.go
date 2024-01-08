@@ -13,7 +13,7 @@
 // Example
 // mh, _ := NewMaglev([]string{"B0", "B1"})
 // node := mh.Node([]byte("key1"))
-package maglevhash
+package maglev_hash
 
 import (
 	"crypto/md5"
@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	// Default slot to be smallest prime number larger than 10,000. It should be
-	// OK for less than 100 nodes.
+	// The default number of slots is the smallest prime number larger than 10,000.
+	// It should be OK for less than 100 nodes.
 	DefaultSlotCnt = 10007
 )
 
@@ -65,12 +65,12 @@ func NewMaglev(nodes []string) (*MaglevHash, error) {
 // deduplicated.
 func NewMaglevWithTableSize(slotCnt int, nodes []string, keyHashFn KeyHashFnType) (*MaglevHash, error) {
 	if !isPrime(slotCnt) {
-		return nil, fmt.Errorf("table size must be a prime number, %d", slotCnt)
+		return nil, fmt.Errorf("number of slots must be a prime number, %d", slotCnt)
 	}
 	nodes = lo.Uniq(nodes)
 	sort.Strings(nodes)
 	if len(nodes) == 0 || len(nodes) > slotCnt {
-		return nil, fmt.Errorf("more nodes than table size, %d > %d", len(nodes), slotCnt)
+		return nil, fmt.Errorf("more nodes than slots, %d > %d", len(nodes), slotCnt)
 	}
 	m := &MaglevHash{
 		slotCnt:   slotCnt,
@@ -97,7 +97,7 @@ func (m *MaglevHash) buildLookup(preferenceList [][]int) []int {
 	next := make([]int, m.nodeCnt)
 
 	// number of slots that have been assigned to nodes.
-	j := 0
+	assignedSlotCnt := 0
 
 	for {
 		for i := 0; i < m.nodeCnt; i++ {
@@ -108,8 +108,8 @@ func (m *MaglevHash) buildLookup(preferenceList [][]int) []int {
 			}
 			lookup[c] = i
 			next[i]++
-			j++
-			if j == m.slotCnt {
+			assignedSlotCnt++
+			if assignedSlotCnt == m.slotCnt {
 				return lookup
 			}
 		}

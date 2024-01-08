@@ -1,4 +1,4 @@
-package maglevhash_test
+package maglev_hash_test
 
 import (
 	"fmt"
@@ -7,18 +7,18 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/pengubco/algorithms/maglevhash"
+	"github.com/pengubco/algorithms/maglev_hash"
 	"github.com/samber/lo"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewError(t *testing.T) {
 	// slot count must be a prime
-	_, err := maglevhash.NewMaglevWithTableSize(10, []string{"B0", "B1"}, crc32.ChecksumIEEE)
+	_, err := maglev_hash.NewMaglevWithTableSize(10, []string{"B0", "B1"}, crc32.ChecksumIEEE)
 	assert.Error(t, err)
 
 	// slot count must be less than node count. Ideally, M >> N.
-	_, err = maglevhash.NewMaglevWithTableSize(5, []string{"B0", "B1", "B2", "B3", "B4", "B5"}, crc32.ChecksumIEEE)
+	_, err = maglev_hash.NewMaglevWithTableSize(5, []string{"B0", "B1", "B2", "B3", "B4", "B5"}, crc32.ChecksumIEEE)
 	assert.Error(t, err)
 }
 
@@ -30,7 +30,7 @@ func TestLoadBalanceAndDisruption(t *testing.T) {
 	nodes := lo.Times(nodeCnt, func(i int) string {
 		return fmt.Sprintf("B%d", i)
 	})
-	mh, err := maglevhash.NewMaglevWithTableSize(slotCnt, nodes, crc32.ChecksumIEEE)
+	mh, err := maglev_hash.NewMaglevWithTableSize(slotCnt, nodes, crc32.ChecksumIEEE)
 	assert.NoError(t, err)
 
 	// key -> node
@@ -54,7 +54,7 @@ func TestLoadBalanceAndDisruption(t *testing.T) {
 	}), func(item string, index int) bool {
 		return index != 5
 	})
-	mh, err = maglevhash.NewMaglevWithTableSize(slotCnt, nodes, crc32.ChecksumIEEE)
+	mh, err = maglev_hash.NewMaglevWithTableSize(slotCnt, nodes, crc32.ChecksumIEEE)
 	assert.NoError(t, err)
 
 	keyToNode2 := make(map[int]string)
@@ -75,7 +75,7 @@ func TestLoadBalanceAndDisruption(t *testing.T) {
 	nodes = lo.Times(nodeCnt, func(i int) string {
 		return fmt.Sprintf("B%d", i)
 	})
-	mh, err = maglevhash.NewMaglevWithTableSize(slotCnt, nodes, crc32.ChecksumIEEE)
+	mh, err = maglev_hash.NewMaglevWithTableSize(slotCnt, nodes, crc32.ChecksumIEEE)
 	assert.NoError(t, err)
 
 	keyToNode3 := make(map[int]string)

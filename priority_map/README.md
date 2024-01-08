@@ -97,13 +97,13 @@ go test -bench BenchmarkPriorityMap -benchmem  -benchtime 10s
 ```text
 goos: darwin
 goarch: arm64
-pkg: github.com/pengubco/algorithms/prioritymap
+pkg: github.com/pengubco/algorithms/priority_map
 BenchmarkPriorityMap_Add_1M-10                    66         175442495 ns/op        149403499 B/op       1023415 allocs/op
 BenchmarkPriorityMap_Update_1M-10                100         124093262 ns/op           80035 B/op              0 allocs/op
 BenchmarkPriorityMap_Del_1M-10                    75         170370006 ns/op               0 B/op              0 allocs/op
 BenchmarkPriorityMap_Pop_1M-10                    19         604293805 ns/op               0 B/op              0 allocs/op
 PASS
-ok      github.com/pengubco/algorithms/prioritymap 94.674s
+ok      github.com/pengubco/algorithms/priority_map 94.674s
 ```
 
 No surprise that `Pop` is most expensive because the heap may need to go from root to a leaf 
