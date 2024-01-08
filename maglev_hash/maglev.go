@@ -20,10 +20,10 @@ import (
 	"encoding/hex"
 	"fmt"
 	"hash/crc32"
-	"math"
 	"math/big"
 	"sort"
 
+	"github.com/pengubco/algorithms/prime"
 	"github.com/samber/lo"
 )
 
@@ -64,7 +64,7 @@ func NewMaglev(nodes []string) (*MaglevHash, error) {
 // In order to make lookup table stable, the given list of nodes are sorted and
 // deduplicated.
 func NewMaglevWithTableSize(slotCnt int, nodes []string, keyHashFn KeyHashFnType) (*MaglevHash, error) {
-	if !isPrime(slotCnt) {
+	if !prime.IsPrime(slotCnt) {
 		return nil, fmt.Errorf("number of slots must be a prime number, %d", slotCnt)
 	}
 	nodes = lo.Uniq(nodes)
@@ -132,25 +132,6 @@ func (m *MaglevHash) buildPreferences() [][]int {
 		}
 	}
 	return nodePreferences
-}
-
-func isPrime(n int) bool {
-	if n <= 1 {
-		return false
-	}
-	if n == 2 || n == 3 {
-		return true
-	}
-	if n%2 == 0 || n%3 == 0 {
-		return false
-	}
-	upperBound := math.Sqrt(float64(n)) + 1
-	for i := 5; i <= int(upperBound); i += 2 {
-		if n%i == 0 {
-			return false
-		}
-	}
-	return true
 }
 
 // md5StringToModulo calculate the MD5 of the given string and module the result

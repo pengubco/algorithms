@@ -25,7 +25,7 @@ func TestNewError(t *testing.T) {
 func TestLoadBalanceAndDisruption(t *testing.T) {
 	nodeCnt := 10
 	slotCnt := 10_007
-	keyspaceCnt := 1_000_000
+	keySpaceCnt := 1_000_000
 
 	nodes := lo.Times(nodeCnt, func(i int) string {
 		return fmt.Sprintf("B%d", i)
@@ -38,13 +38,13 @@ func TestLoadBalanceAndDisruption(t *testing.T) {
 	// node -> number of keys
 	nodeLoad1 := make(map[string]int)
 
-	for i := 0; i < keyspaceCnt; i++ {
+	for i := 0; i < keySpaceCnt; i++ {
 		node := mh.Node([]byte(strconv.FormatInt(int64(i), 10)))
 		keyToNode1[i] = node
 		nodeLoad1[node]++
 	}
 	// the min load and max load should be less than N/M of the total key spaces.
-	err = verifyEvenLoadBalance(nodeLoad1, int(float64(keyspaceCnt)*1.5*float64(nodeCnt)/float64(slotCnt)))
+	err = verifyEvenLoadBalance(nodeLoad1, int(float64(keySpaceCnt)*1.5*float64(nodeCnt)/float64(slotCnt)))
 	assert.NoError(t, err)
 
 	// remove node[5].
@@ -60,14 +60,14 @@ func TestLoadBalanceAndDisruption(t *testing.T) {
 	keyToNode2 := make(map[int]string)
 	// node -> number of keys
 	nodeLoad2 := make(map[string]int)
-	for i := 0; i < keyspaceCnt; i++ {
+	for i := 0; i < keySpaceCnt; i++ {
 		node := mh.Node([]byte(strconv.FormatInt(int64(i), 10)))
 		keyToNode2[i] = node
 		nodeLoad2[node]++
 	}
-	err = verifyEvenLoadBalance(nodeLoad2, int(float64(keyspaceCnt)*1.5*float64(nodeCnt)/float64(slotCnt)))
+	err = verifyEvenLoadBalance(nodeLoad2, int(float64(keySpaceCnt)*1.5*float64(nodeCnt)/float64(slotCnt)))
 	assert.NoError(t, err)
-	err = verifyDisruption(keyspaceCnt, keyToNode1, keyToNode2, 2*keyspaceCnt/nodeCnt)
+	err = verifyDisruption(keySpaceCnt, keyToNode1, keyToNode2, 2*keySpaceCnt/nodeCnt)
 	assert.NoError(t, err)
 
 	// add node[10]
@@ -81,14 +81,14 @@ func TestLoadBalanceAndDisruption(t *testing.T) {
 	keyToNode3 := make(map[int]string)
 	// node -> number of keys
 	nodeLoad3 := make(map[string]int)
-	for i := 0; i < keyspaceCnt; i++ {
+	for i := 0; i < keySpaceCnt; i++ {
 		node := mh.Node([]byte(strconv.FormatInt(int64(i), 10)))
 		keyToNode3[i] = node
 		nodeLoad3[node]++
 	}
-	err = verifyEvenLoadBalance(nodeLoad3, int(float64(keyspaceCnt)*math.Ceil(float64(nodeCnt)/float64(slotCnt))))
+	err = verifyEvenLoadBalance(nodeLoad3, int(float64(keySpaceCnt)*math.Ceil(float64(nodeCnt)/float64(slotCnt))))
 	assert.NoError(t, err)
-	err = verifyDisruption(keyspaceCnt, keyToNode1, keyToNode3, 2*keyspaceCnt/(nodeCnt-1))
+	err = verifyDisruption(keySpaceCnt, keyToNode1, keyToNode3, 2*keySpaceCnt/(nodeCnt-1))
 	assert.NoError(t, err)
 }
 
