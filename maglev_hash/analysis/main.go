@@ -11,11 +11,11 @@ import (
 	"github.com/samber/lo"
 )
 
-// This program writes out three lines.
-// first line: number of slots assigned to each node
-// second line: number of slots that need to be redistributed after removing a node.
-// third line: slotCnt/nodeCnt, this is the theoretical minimum number of
-// slots need to be moved.
+// This program writes out four lines.
+// 1. number of nodes
+// 2. number of slots
+// 3: number of slots assigned to each node
+// 4: number of slots that need to be redistributed after removing a node.
 func main() {
 	var nodeCnt int
 	var slotCnt int
@@ -27,6 +27,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(nodeCnt)
+	fmt.Println(slotCnt)
+
 	slotToNode := e.getSlotAssignment()
 	nodeLoads := lo.Values(calculateNodeLoads(slotToNode))
 	b, _ := json.Marshal(nodeLoads)
@@ -36,7 +40,6 @@ func main() {
 	newSlotToNode := e.getSlotAssignment()
 	slotMoved := calculateSlotMove(slotToNode, newSlotToNode)
 	fmt.Printf("%d\n", slotMoved)
-	fmt.Printf("%d\n", slotCnt/nodeCnt)
 }
 
 func calculateNodeLoads(slotToNode map[int]int) map[int]int {
